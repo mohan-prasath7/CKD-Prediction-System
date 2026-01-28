@@ -1,0 +1,555 @@
+{% extends 'main.html' %}
+{% block content %}
+
+<style>
+  .prediction-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    animation: containerFadeIn 0.8s ease-out;
+  }
+
+  @keyframes containerFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .page-title {
+    text-align: center;
+    color: #1e3c72;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    position: relative;
+    padding-bottom: 1rem;
+  }
+
+  .page-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, #0D6EFD 0%, #20C997 100%);
+    border-radius: 2px;
+    animation: titleUnderline 0.8s ease-out;
+  }
+
+  @keyframes titleUnderline {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100px;
+    }
+  }
+
+  .form-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    margin-bottom: 3rem;
+    animation: cardAppear 1s ease-out;
+  }
+
+  @keyframes cardAppear {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .form-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .form-section-title {
+    color: #1e3c72;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+    border-left: 4px solid #0D6EFD;
+    animation: sectionSlide 0.6s ease-out;
+  }
+
+  @keyframes sectionSlide {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .input-group-custom {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+
+  .input-group-custom input {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    color: #495057;
+    font-weight: 500;
+  }
+
+  .input-group-custom input:focus {
+    outline: none;
+    border-color: #0D6EFD;
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .input-group-custom input:hover {
+    border-color: #cbd5e0;
+  }
+
+  .input-group-custom input::placeholder {
+    color: #adb5bd;
+    font-weight: 400;
+  }
+
+  .input-group-custom label {
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ffffff;
+    padding: 0 0.5rem;
+    color: #6c757d;
+    font-size: 0.95rem;
+    font-weight: 500;
+    pointer-events: none;
+    transition: all 0.3s ease;
+  }
+
+  .input-group-custom input:focus + label,
+  .input-group-custom input:not(:placeholder-shown) + label {
+    top: 0;
+    font-size: 0.85rem;
+    color: #0D6EFD;
+  }
+
+  .predict-btn {
+    width: 100%;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, #0D6EFD 0%, #0a58ca 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 24px rgba(13, 110, 253, 0.3);
+    position: relative;
+    overflow: hidden;
+    margin-top: 1rem;
+  }
+
+  .predict-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+  }
+
+  .predict-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(13, 110, 253, 0.4);
+  }
+
+  .predict-btn:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  .predict-btn:active {
+    transform: translateY(-2px);
+  }
+
+  .predict-btn span {
+    position: relative;
+    z-index: 1;
+  }
+
+  .table-section {
+    margin-top: 4rem;
+    animation: tableFadeIn 1s ease-out;
+  }
+
+  @keyframes tableFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .table-title {
+    text-align: center;
+    color: #1e3c72;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+  }
+
+  .table {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  }
+
+  .table thead {
+    background: linear-gradient(135deg, #0D6EFD 0%, #20C997 100%);
+  }
+
+  .table thead th {
+    color: #ffffff;
+    font-weight: 600;
+    padding: 1rem;
+    border: none;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+
+  .table tbody tr {
+    transition: all 0.3s ease;
+  }
+
+  .table tbody tr:hover {
+    background: #f8f9fa;
+    transform: scale(1.01);
+  }
+
+  .table tbody td {
+    padding: 1rem;
+    border: none;
+    border-bottom: 1px solid #e9ecef;
+    text-align: center;
+    color: #495057;
+    font-weight: 500;
+  }
+
+  .table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .disease-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .disease-present {
+    background: #fee;
+    color: #dc3545;
+  }
+
+  .disease-healthy {
+    background: #d1f4e0;
+    color: #198754;
+  }
+
+  @media (max-width: 768px) {
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .form-card {
+      padding: 2rem 1.5rem;
+    }
+
+    .table-title {
+      font-size: 1.5rem;
+    }
+
+    .table {
+      font-size: 0.85rem;
+    }
+
+    .table thead th,
+    .table tbody td {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+</style>
+
+<div class="prediction-container">
+  <h1 class="page-title">Kidney Disease Predictor</h1>
+
+  <div class="form-card">
+    <form class="form-horizontal" action="{{ url_for('predictPage') }}" method="POST">
+
+      <div class="form-section">
+        <h3 class="form-section-title">Basic Information</h3>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="age" placeholder=" " required>
+              <label>Age</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="bp" placeholder=" " required>
+              <label>Blood Pressure (bp)</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="al" placeholder=" " required>
+              <label>Albumin (al)</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 class="form-section-title">Blood & Urine Tests</h3>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="su" placeholder=" " required>
+              <label>Sugar (su)</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="rbc" placeholder=" " required>
+              <label>Red Blood Cells (rbc)</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="pc" placeholder=" " required>
+              <label>Pus Cell (pc)</label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="pcc" placeholder=" " required>
+              <label>Pus Cell Clumps (pcc)</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="ba" placeholder=" " required>
+              <label>Bacteria (ba)</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="bgr" placeholder=" " required>
+              <label>Blood Glucose (bgr)</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 class="form-section-title">Kidney Function Tests</h3>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="bu" placeholder=" " required>
+              <label>Blood Urea (bu)</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="sc" placeholder=" " required>
+              <label>Serum Creatinine (sc)</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="pot" placeholder=" " required>
+              <label>Potassium (pot)</label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="wc" placeholder=" " required>
+              <label>White Blood Cell Count (wc)</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="htn" placeholder=" " required>
+              <label>Hypertension (htn)</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="dm" placeholder=" " required>
+              <label>Diabetes Mellitus (dm)</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 class="form-section-title">Medical Conditions</h3>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="cad" placeholder=" " required>
+              <label>Coronary Artery Disease (cad)</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="pe" placeholder=" " required>
+              <label>Pedal Edema (pe)</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="input-group-custom">
+              <input type="text" name="ane" placeholder=" " required>
+              <label>Anemia (ane)</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="predict-btn">
+        <span>Predict</span>
+      </button>
+    </form>
+  </div>
+
+  <div class="table-section">
+    <h1 class="table-title">Sample Inputs</h1>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>age</th>
+            <th>bp</th>
+            <th>al</th>
+            <th>su</th>
+            <th>rbc</th>
+            <th>pc</th>
+            <th>pcc</th>
+            <th>ba</th>
+            <th>bgr</th>
+            <th>bu</th>
+            <th>sc</th>
+            <th>pot</th>
+            <th>wc</th>
+            <th>htn</th>
+            <th>dm</th>
+            <th>cad</th>
+            <th>pe</th>
+            <th>ane</th>
+            <th>Disease</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>24</td>
+            <td>100</td>
+            <td>2</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>136</td>
+            <td>60</td>
+            <td>1.9</td>
+            <td>3.7</td>
+            <td>9600</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td><span class="disease-badge disease-present">Present</span></td>
+          </tr>
+          <tr>
+            <td>68</td>
+            <td>80</td>
+            <td>3</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>157</td>
+            <td>162</td>
+            <td>9.6</td>
+            <td>4.9</td>
+            <td>11000</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td><span class="disease-badge disease-present">Present</span></td>
+          </tr>
+          <tr>
+            <td>51</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>121</td>
+            <td>27</td>
+            <td>0.8</td>
+            <td>3.7</td>
+            <td>8300</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td><span class="disease-badge disease-healthy">Healthy</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

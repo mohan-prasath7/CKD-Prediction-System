@@ -1,0 +1,582 @@
+{% extends 'main.html' %}
+{% block content %}
+
+<style>
+  .hero-section {
+    background: linear-gradient(135deg, #0D6EFD 0%, #20C997 100%);
+    border-radius: 24px;
+    padding: 4rem 2rem;
+    margin-bottom: 3rem;
+    text-align: center;
+    box-shadow: 0 16px 48px rgba(13, 110, 253, 0.3);
+    position: relative;
+    overflow: hidden;
+    animation: heroAppear 1s ease-out;
+  }
+
+  @keyframes heroAppear {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+  }
+
+  .hero-section h1 {
+    color: #ffffff;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+    line-height: 1.2;
+  }
+
+  .hero-section p {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1.2rem;
+    line-height: 1.8;
+    max-width: 900px;
+    margin: 0 auto 2rem;
+    position: relative;
+    z-index: 1;
+    font-weight: 400;
+  }
+
+  .hero-section .btn {
+    position: relative;
+    z-index: 1;
+    background: #ffffff;
+    color: #0D6EFD;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 1rem 3rem;
+    border-radius: 50px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+
+  .hero-section .btn:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    color: #0D6EFD;
+  }
+
+  .feature-cards-section {
+    margin: 3rem 0;
+  }
+
+  .feature-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    border-left: 5px solid #0D6EFD;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    animation: cardSlideIn 0.6s ease-out forwards;
+  }
+
+  .feature-card:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
+  .feature-card:nth-child(2) {
+    animation-delay: 0.2s;
+    border-left-color: #20C997;
+  }
+
+  @keyframes cardSlideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .feature-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  }
+
+  .feature-card .badge {
+    background: linear-gradient(135deg, #0D6EFD 0%, #0a58ca 100%);
+    color: #ffffff;
+    padding: 0.5rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .feature-card:nth-child(2) .badge {
+    background: linear-gradient(135deg, #20C997 0%, #198f6e 100%);
+  }
+
+  .feature-card h3 {
+    color: #1e3c72;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 1rem 0;
+  }
+
+  .feature-card .text-muted {
+    color: #6c757d !important;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .feature-card p {
+    color: #495057;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .feature-card a {
+    color: #0D6EFD;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .feature-card a:hover {
+    color: #0a58ca;
+    gap: 1rem;
+  }
+
+  .feature-card a::after {
+    content: '→';
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+  }
+
+  .feature-card a:hover::after {
+    transform: translateX(4px);
+  }
+
+  .info-circles-section {
+    margin: 4rem 0;
+    padding: 3rem 0;
+  }
+
+  .info-circle-card {
+    text-align: center;
+    padding: 2rem 1rem;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .info-circle-card:nth-child(1) {
+    animation-delay: 0.2s;
+  }
+
+  .info-circle-card:nth-child(2) {
+    animation-delay: 0.4s;
+  }
+
+  .info-circle-card:nth-child(3) {
+    animation-delay: 0.6s;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .info-circle-card .icon-wrapper {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s ease;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .info-circle-card:hover .icon-wrapper {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  }
+
+  .info-circle-card .icon-wrapper::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.1) 0%, rgba(32, 201, 151, 0.1) 100%);
+    border-radius: 50%;
+  }
+
+  .info-circle-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .info-circle-card h2 {
+    color: #1e3c72;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .info-circle-card p {
+    color: #495057;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .info-circle-card .btn {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: #ffffff;
+    border: none;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(108, 117, 125, 0.3);
+  }
+
+  .info-circle-card .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(108, 117, 125, 0.4);
+    background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+  }
+
+  .featurette-section {
+    padding: 2rem 0;
+    margin: 3rem 0;
+  }
+
+  .featurette-divider {
+    border: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #0D6EFD 50%, transparent 100%);
+    margin: 3rem 0;
+    opacity: 0;
+    animation: lineExpand 1s ease-out forwards;
+  }
+
+  @keyframes lineExpand {
+    from {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+    to {
+      opacity: 0.5;
+      transform: scaleX(1);
+    }
+  }
+
+  .featurette h2 {
+    color: #1e3c72;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 1rem;
+  }
+
+  .featurette h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #0D6EFD 0%, #20C997 100%);
+    border-radius: 2px;
+  }
+
+  .featurette p {
+    color: #495057;
+    font-size: 1.15rem;
+    line-height: 1.8;
+  }
+
+  .cta-section {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border-radius: 24px;
+    padding: 4rem 2rem;
+    margin: 3rem 0;
+    text-align: center;
+    box-shadow: 0 16px 48px rgba(30, 60, 114, 0.3);
+    position: relative;
+    overflow: hidden;
+    animation: ctaAppear 1s ease-out;
+  }
+
+  @keyframes ctaAppear {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .cta-section h1 {
+    color: #ffffff;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-section p {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1.15rem;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-section .btn {
+    position: relative;
+    z-index: 1;
+    background: #ffffff;
+    color: #1e3c72;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 1rem 3rem;
+    border-radius: 50px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+
+  .cta-section .btn:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    color: #1e3c72;
+  }
+
+  .alert {
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+    border: none;
+    box-shadow: 0 4px 16px rgba(220, 53, 69, 0.2);
+    animation: alertSlide 0.5s ease-out;
+  }
+
+  @keyframes alertSlide {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero-section h1 {
+      font-size: 2rem;
+    }
+
+    .hero-section p {
+      font-size: 1rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.5rem;
+    }
+
+    .info-circle-card .icon-wrapper {
+      width: 120px;
+      height: 120px;
+    }
+
+    .featurette h2 {
+      font-size: 1.8rem;
+    }
+
+    .cta-section h1 {
+      font-size: 2rem;
+    }
+  }
+</style>
+
+{% if message %}
+<div class="alert alert-danger">{{ message }}</div>
+{% endif %}
+
+<section class="hero-section">
+  <div class="container">
+    <h1>Chronic Kidney Disease Prediction</h1>
+    <p>Chronic Kidney Disease (CKD) is a serious and growing global health concern. This intelligent screening system leverages machine learning techniques to analyze key clinical parameters and assist in the early identification of kidney disease, enabling timely medical attention and improved patient outcomes.</p>
+    <p>
+      <a href="https://www.mayoclinic.org/diseases-conditions/chronic-kidney-disease/symptoms-causes/syc-20354521" class="btn" target="_blank">Read More about the Disease</a>
+    </p>
+  </div>
+</section>
+
+<div class="feature-cards-section">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="feature-card">
+        <span class="badge">Machine Learning</span>
+        <h3>Random Forest</h3>
+        <div class="text-muted">For Regression & Classification</div>
+        <p>Random forest is a supervised learning algorithm that combines multiple decision trees to create a more accurate and stable prediction model. The ensemble approach significantly improves prediction reliability and reduces overfitting.</p>
+        <a href="#">Continue reading</a>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="feature-card">
+        <span class="badge">Model & Algorithm</span>
+        <h3>XGBoost</h3>
+        <div class="text-muted">Gradient Boosting Machine</div>
+        <p>XGBoost is an optimized gradient boosting algorithm that dominates machine learning competitions. It delivers exceptional performance on structured medical data through advanced regularization and parallel processing.</p>
+        <a href="#">Continue reading</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="info-circles-section">
+  <div class="row">
+    <div class="col-lg-4 info-circle-card">
+      <div class="icon-wrapper">
+        <img src="https://cdn.icon-icons.com/icons2/2593/PNG/512/data_icon_154512.png" alt="Dataset">
+      </div>
+      <h2>Data-Set</h2>
+      <p>We utilized the comprehensive Kaggle Chronic Kidney Disease dataset containing 1338 records. After meticulous data classification, preprocessing, and exploratory analysis, we achieved optimal model performance.</p>
+      <p><a class="btn" href="#" role="button">View details &raquo;</a></p>
+    </div>
+    <div class="col-lg-4 info-circle-card">
+      <div class="icon-wrapper">
+        <img src="https://www.edureka.co/blog/wp-content/uploads/2019/01/Classification-Random-Forest-Random-Forest-In-R-Edureka-2-381x300.png" alt="Algorithm">
+      </div>
+      <h2>Algorithm</h2>
+      <p>Random Forest is a powerful supervised learning technique utilizing ensemble methods. It creates multiple decision trees and merges their predictions to deliver superior accuracy for both classification and regression tasks.</p>
+      <p><a class="btn" href="#" role="button">View details &raquo;</a></p>
+    </div>
+    <div class="col-lg-4 info-circle-card">
+      <div class="icon-wrapper">
+        <img src="https://cdn.pixabay.com/photo/2016/05/25/13/18/target-1414775_960_720.png" alt="Accuracy">
+      </div>
+      <h2>Accuracy</h2>
+      <p>XGBoost's gradient boosting framework excels at handling complex medical data patterns. After rigorous training and validation, our model achieved an impressive <b>98% accuracy</b> in CKD prediction.</p>
+      <p><a class="btn" href="#" role="button">View details &raquo;</a></p>
+    </div>
+  </div>
+</div> -->
+
+<div class="featurette-section">
+  <!-- <hr class="featurette-divider"> -->
+
+  <div class="row featurette">
+    <div class="col-md-12">
+      <h2>How it works</h2>
+      <p>This prediction system is developed for healthcare use cases where early identification of kidney disease is essential. By analyzing patient clinical data through machine learning, the system assists in detecting potential CKD conditions and supports timely medical evaluation. It is deployed using modern web technologies to ensure reliable and accessible screening.</p>
+    </div>
+  </div>
+
+  <!-- <hr class="featurette-divider">
+
+  <div class="row featurette">
+    <div class="col-md-12">
+      <h2>Conflicts & Modifications</h2>
+      <p>Deployed on the Flask framework, our system provides straightforward classification and regression analysis. Ensure proper installation of TensorFlow and Python dependencies with matching versions to avoid compatibility issues. Following the correct setup procedure guarantees smooth operation.</p>
+    </div>
+  </div>
+
+  <hr class="featurette-divider">
+
+  <div class="row featurette">
+    <div class="col-md-12">
+      <h2>Future implementations</h2>
+      <p>Future enhancements include migration to Django for improved scalability and the addition of medical image processing capabilities. Planned features include X-ray image analysis for comprehensive disease prediction and expanded diagnostic capabilities.</p>
+    </div>
+  </div> -->
+
+  <!-- <hr class="featurette-divider"> -->
+</div>
+
+<section class="cta-section">
+  <div class="container">
+    <h1>Ready to Check Your Health Status?</h1>
+    <p>Use our advanced AI-powered prediction system to assess your chronic kidney disease risk. Our machine learning model provides fast, accurate analysis based on clinical parameters.</p>
+    <p>
+      <a href="{{ url_for('kidneyPage') }}" class="btn">Check out the Project</a>
+    </p>
+  </div>
+</section>
+
+{% endblock %}

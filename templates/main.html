@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="og:title" content="Kidney-Disease Prediction">
+  <meta name="author" content="Venkata Sreeram">
+  <meta name="og:image" content="static/logo1.png">
+  <meta name="Keywords" content="Flask, Machine Learning, Deep Learning, Artificial Intelligence, AI, ML,DL, Web Development">
+  <meta name="description" content="A Machine Learning and Deep Learning based webapp for Multiple Disease Prediction.">
+  <title>CKD Predictor</title>
+  <link rel="icon" href="{{ url_for('static', filename = 'logo1.png') }}" type="image/icon type">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      background-attachment: fixed;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      animation: pageLoad 0.8s ease-out forwards;
+    }
+
+    @keyframes pageLoad {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .navbar {
+      background: rgba(13, 110, 253, 0.95) !important;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 1rem 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .navbar-brand h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin: 0;
+      background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .navbar-dark .navbar-nav .nav-link {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+      font-size: 1rem;
+      margin: 0 0.5rem;
+      padding: 0.5rem 1rem;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .navbar-dark .navbar-nav .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 3px;
+      background: #20C997;
+      transform: translateX(-50%);
+      transition: width 0.3s ease;
+    }
+
+    .navbar-dark .navbar-nav .nav-link:hover {
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    .navbar-dark .navbar-nav .nav-link:hover::after {
+      width: 80%;
+    }
+
+    .navbar-dark .navbar-nav .nav-link h3 {
+      font-size: 1rem;
+      margin: 0;
+      font-weight: 500;
+    }
+
+    main {
+      flex: 1;
+      padding-top: 80px;
+      animation: contentSlide 0.8s ease-out;
+    }
+
+    @keyframes contentSlide {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .container-fluid {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    footer {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      padding: 2rem 0;
+      margin-top: auto;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    footer ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    footer li {
+      display: inline-block;
+      margin: 0 1.5rem;
+    }
+
+    footer a {
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    footer a:hover {
+      color: #20C997;
+      transform: translateY(-2px);
+    }
+
+    footer p {
+      color: rgba(255, 255, 255, 0.9);
+      margin: 1rem 0 0 0;
+      font-weight: 400;
+    }
+
+    footer .fa {
+      font-size: 1.2rem;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .slide-up {
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      background: #ffffff;
+      border: none;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0D6EFD 0%, #0a58ca 100%);
+      border: none;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(13, 110, 253, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(13, 110, 253, 0.4);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #20C997 0%, #198f6e 100%);
+      border: none;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(32, 201, 151, 0.3);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(32, 201, 151, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .navbar-brand h1 {
+        font-size: 1.2rem;
+      }
+
+      footer li {
+        display: block;
+        margin: 0.5rem 0;
+      }
+
+      .container-fluid {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <a style="text-decoration: none;" href="{{ url_for('home') }}" class="navbar-brand">
+      <h1>CKD Prediction System</h1>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a href="{{ url_for('home') }}" class="nav-link"><h3>Home</h3></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="{{ url_for('kidneyPage') }}"><h3>Prediction System</h3></a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container-fluid">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </main>
+
+  <!-- <footer>
+    <center>
+      <ul>
+        <li><a href="https://www.linkedin.com/in/mohan-prasath-r" target="blank"><span class="fa fa-linkedin"></span> LinkedIn</a></li>
+        <li><a href="https://github.com/mohan-prasath7" target="blank"><span class="fa fa-github"></span> GitHub</a></li>
+      </ul>
+      <p>Made with <span style="color: #ff6b6b;">&hearts;</span> by Mohan Prasath</p>
+    </center>
+  </footer> -->
+</body>
+</html>
